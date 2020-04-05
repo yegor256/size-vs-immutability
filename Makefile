@@ -3,12 +3,15 @@ install:
 	bundle update
 	python3 -m pip install -r requirements.txt
 
-all: repos.txt clone copy filter calc summary
+all: search clone copy filter calc summary
 
 clean:
 	rm -rf repos.txt
+	rm -rf summary.csv
+	rm -rf clones
+	rm -rf copies
 
-repos.txt:
+search:
 	ruby find-repos.rb | tee repos.txt
 
 clone:
@@ -42,7 +45,7 @@ calc:
 	for f in $$(find copies -type file -name '*.java'); do \
 		p="$${f}.m"; \
 		if [ ! -e "$${p}" ]; then \
-			python3 calc.py "$${f}" > "$${p}"; \
+			python3 calc.py "$${f}" > "$${p}" || rm "$${f}"; \
 		fi \
 	done
 
