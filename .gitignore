@@ -1,3 +1,5 @@
 clones/
-filtered/
+copies/
 repos.txt
+summary.csv
+__pycache__/

@@ -3,7 +3,7 @@ install:
 	bundle update
 	python3 -m pip install -r requirements.txt
 
-all: repos.txt clone filter
+all: repos.txt clone copy filter calc summary
 
 clean:
 	rm -rf repos.txt
@@ -22,24 +22,33 @@ clone:
 		fi \
 	done < repos.txt
 
-filter:
+copy:
 	for d in $$(find clones -depth 2 -type directory); do \
-		p=$${d/clones/filtered}; \
+		p=$${d/clones/copies}; \
 		echo "$${p}"; \
 		if [ -e "$${p}" ]; then \
 			echo "$${p} already here"; \
 		else \
 			mkdir -p "$${p}"; \
 			cp -R "$${d}"/* "$${p}"; \
-			find "$${p}" -type file -not -name '*.java' -exec rm {} \; ; \
 		fi \
 	done
 
-metrics:
-	for f in $$(find filtered -type file -name '*.java'); do \
+filter:
+	find copies -type file -not -name '*.java' -exec rm {} \;
+	find copies -type file -name '*Test.java' -exec rm {} \;
+
+calc:
+	for f in $$(find copies -type file -name '*.java'); do \
 		p="$${f}.m"; \
 		if [ ! -e "$${p}" ]; then \
-			python3 -m calc.py > "$${p}"; \
+			python3 calc.py "$${f}" > "$${p}"; \
 		fi \
+	done
+
+summary:
+	rm -rf summary.csv
+	for f in $$(find copies -type file -name '*.java.m'); do \
+		cat "$${f}" >> summary.csv; \
 	done
 
