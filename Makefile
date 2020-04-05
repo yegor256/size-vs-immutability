@@ -1,9 +1,9 @@
 
+all: search clone copy filter calc summary
+
 install:
 	bundle update
 	python3 -m pip install -r requirements.txt
-
-all: search clone copy filter calc summary
 
 clean:
 	rm -rf repos.txt
