@@ -1,4 +1,8 @@
 
+install:
+	bundle update
+	python3 -m pip install -r requirements.txt
+
 all: repos.txt clone filter
 
 clean:
@@ -19,7 +23,7 @@ clone:
 	done < repos.txt
 
 filter:
-	for d in $$(find . -depth 3 -type directory); do \
+	for d in $$(find clones -depth 2 -type directory); do \
 		p=$${d/clones/filtered}; \
 		echo "$${p}"; \
 		if [ -e "$${p}" ]; then \
@@ -31,7 +35,11 @@ filter:
 		fi \
 	done
 
-# metrics.csv:
-# 	while read line; do ./parse.sh "$${parts[0]}"; \
-# 	done < repos.txt
+metrics:
+	for f in $$(find filtered -type file -name '*.java'); do \
+		p="$${f}.m"; \
+		if [ ! -e "$${p}" ]; then \
+			python3 -m calc.py > "$${p}"; \
+		fi \
+	done
 
