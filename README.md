@@ -1,5 +1,6 @@
 Question: Is there a correlation between Java class size and its
 immutability? It is suggested that immutable classes are smaller.
+This research proves this hypothesis.
 
 You need to have installed:
 
