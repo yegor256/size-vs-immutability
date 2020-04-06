@@ -58,6 +58,8 @@ summary:
 		cat "$${f}" >> summary.csv; \
 	done
 	echo "There are $$(wc -l < summary.csv) Java classes measured"
+	echo "\\\def\\\totaljavafiles{$$(wc -l < summary.csv)}" > total.tex
+	echo "\\\def\\\totalrepos{$$(find clones -depth 2 -type directory | wc -l)}" >> total.tex
 
 draw: summary.csv
 	ruby draw.rb summary.csv > ncss.tex

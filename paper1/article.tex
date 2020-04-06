@@ -1,12 +1,11 @@
-\documentclass[a4paper,UKenglish,cleveref, autoref]{lipics-v2019}
+% \documentclass[a4paper,UKenglish,cleveref, autoref]{lipics-v2019}
+\documentclass[12pt]{article}
 \bibliographystyle{plainurl}
 \title{The Impact of Class Immutability on NCSS}
-\author{Yegor Bugayenko}
-  {Huawei Technologies Co., Ltd.}
-  {Russian Research Institute (RRI)}{Moscow, Russia}{yegor.bugayenko@huawei.com}
-\authorrunning{Yegor Bugayenko}
-\ccsdesc[100]{Software and its engineering~Object oriented languages}
-\keywords{Object-Oriented Programming, Constructors, Cohesion}
+\author{Yegor Bugayenko\\Huawei Technologies Co., Ltd.\\Russian Research Institute (RRI)\\Moscow, Russia\\yegor.bugayenko@huawei.com}{}{}
+% \authorrunning{Yegor Bugayenko}
+% \ccsdesc[100]{Software and its engineering~Object oriented languages}
+% \keywords{Object-Oriented Programming, Immutability, NCSS}
 \usepackage[utf8]{inputenc}
 \usepackage[inline]{enumitem}
 \usepackage{amsmath}
@@ -23,7 +22,9 @@
 \newenvironment{nicetable}
   {\setlength{\parindent}{0em}\medskip\small}
   {\medskip}
+\input{../total}
 \begin{document}
+\raggedbottom
 \maketitle
 
 \begin{abstract}
@@ -54,7 +55,7 @@ No similar research has been done so far.
 \section{Empirical Results}
 
 A list of Java repositories were retrieved from GitHub via their
-public API. The first 50 repositories were taken, which satisfied
+public API. The first \totalrepos{} repositories were taken, which satisfied
 the selection criteria:
 \begin{enumerate*}[label={\arabic*)}]
 \item more than 1000 stars,
@@ -66,24 +67,26 @@ The list included popular Java open source products, like
 Spring Framework, RxJava, Google Guava, and others.
 
 Files with \texttt{.java} extension were taken from all repositories.
-There were 20,500 files found.
+There were \totaljavafiles{} files found. Classes without a single
+non-\texttt{static} attribute were excluded (including interfaces and enums).
 
-NCSS metric was calculated for each Java class.
-
-Immutability was calculated for each Java class. A class was considered
-immutable if it didn't have any attributes without \texttt{final} modified.
+NCSS metric and immutability were calculated for each Java class.
+A class was considered immutable if it didn't have any
+attributes without \texttt{final} modified.
 
 The Figure~\ref{fig:1} demonstrates the results obtained. The x-axis is
 the value of NCSS. The y-axis is the share of immutable classes among
-all classes with the given NCSS.
+all classes with the given NCSS. The diameter of the plot on the graph
+is related to the amount of classes found for the specific NCSS.
 
 \begin{figure}[h]
   \input{../ncss.tex}
-  \caption{Distribution of classes by NCSS}
+  \caption{Distribution of class immutability by NCSS}
   \label{fig:1}
 \end{figure}
 
-The tendency is visually obvious: larger classes are less often immutable.
+The tendency is visually obvious: larger classes are less often immutable. It
+is also obvious that the majority of classes have NCSS values smaller than 100.
 
 \section{Conclusion}
 
