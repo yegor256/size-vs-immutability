@@ -1,5 +1,5 @@
 
-all: search clone copy filter calc summary
+all: search clone copy filter calc summary draw article
 
 install:
 	bundle update
@@ -17,7 +17,7 @@ search:
 clone:
 	while read line; do \
 		p="clones/$${line}"; \
-		if [ -e "$${p}" ]; then \
+		if [ -e "$${p}/.git" ]; then \
 			echo "$${p} already here"; \
 		else \
 			mkdir -p "$${p}"; \
@@ -28,10 +28,10 @@ clone:
 copy:
 	for d in $$(find clones -depth 2 -type directory); do \
 		p=$${d/clones/copies}; \
-		echo "$${p}"; \
 		if [ -e "$${p}" ]; then \
 			echo "$${p} already here"; \
 		else \
+			echo "Copying $${p}..."; \
 			mkdir -p "$${p}"; \
 			cp -R "$${d}"/* "$${p}"; \
 		fi \
@@ -40,6 +40,9 @@ copy:
 filter:
 	find copies -type file -not -name '*.java' -exec rm {} \;
 	find copies -type file -name '*Test.java' -exec rm {} \;
+
+uncalc:
+	find copies -type file -name '*.java.m' -exec rm {} \;
 
 calc:
 	for f in $$(find copies -type file -name '*.java'); do \
@@ -54,4 +57,10 @@ summary:
 	for f in $$(find copies -type file -name '*.java.m'); do \
 		cat "$${f}" >> summary.csv; \
 	done
+	echo "There are $$(wc -l < summary.csv) Java classes measured"
 
+draw: summary.csv
+	ruby draw.rb summary.csv > ncss.tex
+
+article: ncss.tex
+	cd paper1; latexmk -pdf article

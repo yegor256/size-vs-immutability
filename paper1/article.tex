@@ -1,0 +1,93 @@
+\documentclass[a4paper,UKenglish,cleveref, autoref]{lipics-v2019}
+\bibliographystyle{plainurl}
+\title{The Impact of Class Immutability on NCSS}
+\author{Yegor Bugayenko}
+  {Huawei Technologies Co., Ltd.}
+  {Russian Research Institute (RRI)}{Moscow, Russia}{yegor.bugayenko@huawei.com}
+\authorrunning{Yegor Bugayenko}
+\ccsdesc[100]{Software and its engineering~Object oriented languages}
+\keywords{Object-Oriented Programming, Constructors, Cohesion}
+\usepackage[utf8]{inputenc}
+\usepackage[inline]{enumitem}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{pgfplots}
+\usepackage{verbatimbox}
+\usepackage{interval}
+\usepackage{hyperref}
+\usepackage{minted}
+  \setminted{fontsize=\footnotesize}
+  \setminted{breaklines}
+  \usemintedstyle{bw}
+\newcommand{\code}[1]{\texttt{#1}}
+\newenvironment{nicetable}
+  {\setlength{\parindent}{0em}\medskip\small}
+  {\medskip}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+...
+\end{abstract}
+
+\section{Introduction}
+
+One of the most important factors negatively affecting the quality
+of object-oriented software is the length of the code. Larger classes
+cause readability and maintability issues. One of the simplest way
+to calculate size of a Java class is via the NCSS metric, which
+stands for Non-Commenting Source Statements. Larger classes with bigger
+amount of statements demonstrate higher values of NCSS.
+
+Immutability is a property of a class in OOP. A class is immutable if
+it's impossible to modify its attributes after instantiation. In Java this
+technically means that all attributes have \texttt{final} modifier attached
+to them.
+
+This research empirically validates the relationship between immutability
+and NCSS.
+
+\section{Related Work}
+
+No similar research has been done so far.
+
+\section{Empirical Results}
+
+A list of Java repositories were retrieved from GitHub via their
+public API. The first 50 repositories were taken, which satisfied
+the selection criteria:
+\begin{enumerate*}[label={\arabic*)}]
+\item more than 1000 stars,
+\item more than 200 Kb of data,
+\item not archived,
+\item public.
+\end{enumerate*}
+The list included popular Java open source products, like
+Spring Framework, RxJava, Google Guava, and others.
+
+Files with \texttt{.java} extension were taken from all repositories.
+There were 20,500 files found.
+
+NCSS metric was calculated for each Java class.
+
+Immutability was calculated for each Java class. A class was considered
+immutable if it didn't have any attributes without \texttt{final} modified.
+
+The Figure~\ref{fig:1} demonstrates the results obtained. The x-axis is
+the value of NCSS. The y-axis is the share of immutable classes among
+all classes with the given NCSS.
+
+\begin{figure}[h]
+  \input{../ncss.tex}
+  \caption{Distribution of classes by NCSS}
+  \label{fig:1}
+\end{figure}
+
+The tendency is visually obvious: larger classes are less often immutable.
+
+\section{Conclusion}
+
+It was empirically confirmed that larger Java classes tend to be immutable
+less frequently than smaller ones.
+
+\end{document}

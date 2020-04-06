@@ -7,12 +7,16 @@ def immutable(tree):
     raise Exception('This is not a class')
   fields = tlist[0][1].filter(javalang.tree.FieldDeclaration)
   flist = [v for v in fields]
-  if not flist:
-    raise Exception('This are no attributes')
   immutable = True
-  for path, node in fields:
+  found = 0
+  for path, node in flist:
+    if 'static' in node.modifiers:
+      continue
     if not 'final' in node.modifiers:
       immutable = False
+    found += 1
+  if found == 0:
+    raise Exception('There are no attributes')
   return immutable
 
 def ncss(tree):
@@ -30,9 +34,9 @@ def ncss(tree):
   return metric
 
 with open(sys.argv[1], encoding='utf-8') as f:
-  raw = javalang.parse.parse(f.read())
-  tree = raw.filter(javalang.tree.ClassDeclaration)
   try:
+    raw = javalang.parse.parse(f.read())
+    tree = raw.filter(javalang.tree.ClassDeclaration)
     print(str(ncss(raw)) + ',' + ('yes' if immutable(tree) else 'no'))
   except Exception as e:
     sys.exit(e.args)

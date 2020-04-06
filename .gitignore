@@ -3,3 +3,12 @@ copies/
 repos.txt
 summary.csv
 __pycache__/
+article.pdf
+*.aux
+*.fdb_latexmk
+*.fls
+*.out
+*.vtc
+.DS_Store
+ncss.tex
+*.log
