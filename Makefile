@@ -11,7 +11,7 @@ clean:
 	rm -rf summary.csv
 	rm -rf clones
 	rm -rf copies
-	cd paper1; latexmk -c
+	cd paper; latexmk -c
 
 search:
 	ruby find-repos.rb | tee repos.txt
@@ -68,4 +68,4 @@ draw: summary.csv
 	ruby draw.rb --max-ncss=200 --circle-size=4 --summary=summary.csv > ncss-closer.tex
 
 article: ncss.tex
-	cd paper1; latexmk -pdf article
+	cd paper; latexmk -pdf article

@@ -78,7 +78,9 @@ attributes without \texttt{final} modified.
 The Figure~\ref{fig:1} demonstrates the results obtained. The x-axis is
 the value of NCSS. The y-axis is the share of immutable classes among
 all classes with the given NCSS. The diameter of the plot on the graph
-is related to the amount of classes found for the specific NCSS.
+is related to the amount of classes found for the specific NCSS. Classes
+with NCSS larger than 1000 are excluded from the graph for the sake of
+visual elegancy.
 
 \begin{figure}[h]
   \input{../ncss.tex}
@@ -88,6 +90,8 @@ is related to the amount of classes found for the specific NCSS.
 
 The tendency is visually obvious: larger classes are less often immutable. It
 is also obvious that the majority of classes have NCSS values smaller than 100.
+
+The Figure~\ref{fig:2} demonstrates classes with NCSS lower than 200.
 
 \begin{figure}[h]
   \input{../ncss-closer.tex}
@@ -99,5 +103,8 @@ is also obvious that the majority of classes have NCSS values smaller than 100.
 
 It was empirically confirmed that larger Java classes tend to be immutable
 less frequently than smaller ones.
+
+The source code of Ruby and Python scripts used to do the research
+is available in GitHub repository \texttt{yegor256/size-vs-immutability}.
 
 \end{document}
