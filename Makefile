@@ -64,7 +64,8 @@ summary:
 	echo "\\\def\\\totalrepos{$$(find clones -depth 2 -type directory | wc -l)}" >> total.tex
 
 draw: summary.csv
-	ruby draw.rb summary.csv > ncss.tex
+	ruby draw.rb --max-ncss=1000 --circle-size=8 --summary=summary.csv > ncss.tex
+	ruby draw.rb --max-ncss=200 --circle-size=4 --summary=summary.csv > ncss-closer.tex
 
 article: ncss.tex
 	cd paper1; latexmk -pdf article

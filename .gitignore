@@ -11,5 +11,6 @@ article.pdf
 *.vtc
 .DS_Store
 ncss.tex
+ncss-closer.tex
 *.log
 total.tex
