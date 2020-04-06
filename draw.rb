@@ -3,7 +3,7 @@ data = []
 File.open(ARGV[0]).read.each_line do |l|
   ncss, flag = l.strip.split(',', 2)
   ncss = ncss.to_i
-  next if ncss > 600
+  next if ncss > 1000
   data << { ncss: ncss, immutable: flag == 'yes' }
 end
 
@@ -31,7 +31,7 @@ puts "% Hi: #{hi}"
 puts "% Step: #{step} (steps: #{steps})"
 
 puts '\begin{tikzpicture}'
-puts '\begin{axis}[width=12cm,height=8cm,'
+puts '\begin{axis}[width=14cm,height=10cm,'
 puts 'axis lines=middle, xlabel={NCSS}, ylabel={},'
 puts "xmin=#{lo}, xmax=#{hi}, ymin=0, ymax=100,"
 puts 'yticklabel={\pgfmathprintnumber{\tick}\%},'

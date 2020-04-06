@@ -1,15 +1,17 @@
 
-all: search clone copy filter calc summary draw article
+all: install search clone copy filter calc summary draw article
 
 install:
 	bundle update
 	python3 -m pip install -r requirements.txt
 
 clean:
+	rm -rf *.tex
 	rm -rf repos.txt
 	rm -rf summary.csv
 	rm -rf clones
 	rm -rf copies
+	cd paper1; latexmk -c
 
 search:
 	ruby find-repos.rb | tee repos.txt
@@ -28,7 +30,7 @@ clone:
 copy:
 	for d in $$(find clones -depth 2 -type directory); do \
 		p=$${d/clones/copies}; \
-		if [ -e "$${p}" ]; then \
+		if [ -e "$${p}/.git" ]; then \
 			echo "$${p} already here"; \
 		else \
 			echo "Copying $${p}..."; \
@@ -38,11 +40,11 @@ copy:
 	done
 
 filter:
-	find copies -type file -not -name '*.java' -exec rm {} \;
-	find copies -type file -name '*Test.java' -exec rm {} \;
+	find copies -type file -not -name '*.java' -exec rm "{}" \;
+	find copies -type file -name '*Test.java' -exec rm "{}" \;
 
 uncalc:
-	find copies -type file -name '*.java.m' -exec rm {} \;
+	find copies -type file -name '*.java.m' -exec rm "{}" \;
 
 calc:
 	for f in $$(find copies -type file -name '*.java'); do \
