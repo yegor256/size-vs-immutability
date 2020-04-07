@@ -42,6 +42,7 @@ copy:
 filter:
 	find copies -type file -not -name '*.java' -exec rm "{}" \;
 	find copies -type file -name '*Test.java' -exec rm "{}" \;
+	find copies -type file -name 'package-info.java' -exec rm "{}" \;
 
 uncalc:
 	find copies -type file -name '*.java.m' -exec rm "{}" \;
@@ -65,7 +66,6 @@ summary:
 
 draw: summary.csv
 	ruby draw.rb --max-ncss=1000 --circle-size=8 --summary=summary.csv > ncss.tex
-	ruby draw.rb --max-ncss=200 --circle-size=4 --summary=summary.csv > ncss-closer.tex
 
 article: ncss.tex
 	cd paper; latexmk -pdf article

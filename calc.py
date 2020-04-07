@@ -33,10 +33,11 @@ def ncss(tree):
       metric += 1
   return metric
 
-with open(sys.argv[1], encoding='utf-8') as f:
+java = sys.argv[1]
+with open(java, encoding='utf-8') as f:
   try:
     raw = javalang.parse.parse(f.read())
     tree = raw.filter(javalang.tree.ClassDeclaration)
-    print(str(ncss(raw)) + ',' + ('yes' if immutable(tree) else 'no'))
+    print(str(ncss(raw)) + ',' + ('yes' if immutable(tree) else 'no') + ',' + java)
   except Exception as e:
-    sys.exit(e.args)
+    sys.exit(str(e) + ': ' + java)

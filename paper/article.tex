@@ -2,7 +2,7 @@
 \documentclass[12pt]{article}
 \bibliographystyle{plainurl}
 \title{The Impact of Immutability on Class Size}
-\author{Yegor Bugayenko\\Huawei Technologies Co., Ltd.\\Russian Research Institute (RRI)\\Moscow, Russia\\\texttt{yegor.bugayenko@huawei.com}}{}{}
+\author{Yegor Bugayenko\\Huawei Technologies Co., Ltd.\\Russian Research Institute (RRI)\\\texttt{yegor.bugayenko@huawei.com}}{}{}
 % \authorrunning{Yegor Bugayenko}
 % \ccsdesc[100]{Software and its engineering~Object oriented languages}
 % \keywords{Object-Oriented Programming, Immutability, NCSS}
@@ -44,6 +44,12 @@ Immutability is a property of a class in OOP. A class is immutable if
 it's impossible to modify its attributes after instantiation. In Java this
 technically means that all attributes have \texttt{final} modifier attached
 to them.
+Immutable classes greatly simplify programming, program maintenance, and
+reasoning about programs. Immutable classes can be freely shared, even between
+concurrent threads and with untrusted code, without the need to worry
+about modifications, even temporary ones, that could result in
+inconsistent states or broken invariants.
+Immutability is a recommended coding practice for Java~\cite{bloch2016}.
 
 This research empirically validates the relationship between immutability
 and NCSS.
@@ -65,21 +71,22 @@ the selection criteria:
 \end{enumerate*}
 The list included popular Java open source products, like
 Spring, RxJava, Guava, MyBatis, Clojure, JUnit, Lombok,
-Graal, Selenium, Spark, Mockito, Jenkins, Netty, and others.
+Graal, Selenium, Spark, Mockito, Neo4j, Jenkins, Netty, and others.
 
 Files with \texttt{.java} extension were taken from all repositories.
 There were \totaljavafiles{} files found. Classes without a single
-non-\texttt{static} attribute were excluded (including interfaces and enums).
+non-\texttt{static} attribute were excluded (such as utility classes,
+interfaces, or enums).
 
 NCSS metric and immutability were calculated for each Java class.
 A class was considered immutable if it didn't have any
-attributes without \texttt{final} modified.
+attributes without \texttt{final} modifier.
 
 The Figure~\ref{fig:1} demonstrates the results obtained. The x-axis is
-the value of NCSS. The y-axis is the share of immutable classes among
+the value of NCSS of Java classes. The y-axis is the share of immutable classes among
 all classes with the given NCSS. The diameter of the plot on the graph
 is related to the amount of classes found for the specific NCSS. Classes
-with NCSS larger than 1000 are excluded from the graph for the sake of
+with NCSS larger than 1000 were excluded from the graph for the sake of
 visual elegancy.
 
 \begin{figure}[h]
@@ -91,13 +98,10 @@ visual elegancy.
 The tendency is visually obvious: larger classes are less often immutable. It
 is also obvious that the majority of classes have NCSS values smaller than 100.
 
-The Figure~\ref{fig:2} demonstrates classes with NCSS lower than 200.
+\section{Discussion}
 
-\begin{figure}[h]
-  \input{../ncss-closer.tex}
-  \caption{Closer look to the lower part of the distribution}
-  \label{fig:2}
-\end{figure}
+The notion of immutability is not as straightforward as it might seem, and many
+different definitions of immutability exist~\cite{potanin2013}.
 
 \section{Conclusion}
 
@@ -106,5 +110,7 @@ less frequently than smaller ones.
 
 The source code of Ruby and Python scripts used to do the research
 is available in GitHub repository \texttt{yegor256/size-vs-immutability}.
+
+\bibliography{main}
 
 \end{document}

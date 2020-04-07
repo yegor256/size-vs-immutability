@@ -11,7 +11,7 @@ end
 
 data = []
 File.open(opts[:summary]).read.each_line do |l|
-  ncss, flag = l.strip.split(',', 2)
+  ncss, flag = l.strip.split(',')
   ncss = ncss.to_i
   next if ncss > opts['max-ncss']
   data << { ncss: ncss, immutable: flag == 'yes' }
