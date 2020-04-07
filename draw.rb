@@ -3,6 +3,8 @@
 require 'slop'
 
 opts = Slop.parse(ARGV, strict: true, help: true) do |o|
+  o.integer '--width', default: 12
+  o.integer '--height', default: 8
   o.integer '--max-ncss', default: 1000
   o.integer '--steps', default: 100
   o.integer '--circle-size', default: 8
@@ -40,13 +42,13 @@ puts "% Hi: #{hi}"
 puts "% Step: #{step} (steps: #{opts[:steps]})"
 
 puts '\begin{tikzpicture}'
-puts '\begin{axis}[width=14cm,height=10cm,'
+puts "\\begin{axis}[width=#{opts[:width]}cm,height=#{opts[:height]}cm,"
 puts 'axis lines=middle, xlabel={NCSS}, ylabel={},'
 puts "xmin=#{lo}, xmax=#{hi}, ymin=0, ymax=100,"
 puts 'yticklabel={\pgfmathprintnumber{\tick}\%},'
 puts "extra tick style={major grid style=black},grid=major]"
 cols.each_with_index do |v, i|
-  puts "\\addplot [only marks, mark size=#{[opts['circle-size'] * v[:total] / max,0.5].max}pt] coordinates {"
+  puts "\\addplot [only marks, mark=*, mark options={fill=lightgray,draw=black}, mark size=#{[opts['circle-size'] * v[:total] / max,0.5].max}pt] coordinates {"
   puts "(#{lo + i * step},#{v[:share] * 100})};"
 end
 puts '\end{axis}\end{tikzpicture}'
