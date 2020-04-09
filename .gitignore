@@ -10,10 +10,7 @@ article.pdf
 *.out
 *.vtc
 .DS_Store
-ncss.tex
-ncss-closer.tex
 *.log
-total.tex
 *.bbl
 *.blg
 *.m
