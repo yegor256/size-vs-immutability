@@ -11,4 +11,6 @@ You need to have installed:
   * Ruby 2.6+
 
 Just run `make` and in a few <del>seconds</del> hours, you will get
-`article.pdf` file ready inside `paper1`.
+`article.pdf` file ready inside `/paper`.
+
+Don't want to compile? Just read the [PDF](https://github.com/yegor256/size-vs-immutability/releases/latest/download/article.pdf).

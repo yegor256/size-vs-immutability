@@ -9,7 +9,9 @@ jobs:
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@master
         with:
-          root_file: paper/article.tex
+          working_directory: paper
+          root_file: article.tex
+          args: -pdf -file-line-error -interaction=nonstopmode -shell-escape
       - name: Set env
         if: github.ref == 'refs/heads/master'
         run: echo ::set-env name=GITHUB_SHA_SHORT::$(echo $GITHUB_SHA | cut -c 1-6)
