@@ -56,7 +56,36 @@ and NCSS.
 
 \section{Related Work}
 
-No similar research has been done so far.
+Object immutability has been the subject of multiple researches since
+the begining of object-oriented programming. Even though, according to~\cite{potanin2013},
+``the notion of immutability is not as straightforward as it might seem, and many
+different definitions of immutability exist,'' ...
+
+Even though Java encourages programmers to explicitly make objects immutable
+by attaching the \texttt{final} modifier to its attributes, very often, as was
+demonstrated by~\cite{unkel2008}, the modifier is not used even when
+attributes are not modified after object instantiation or, as demonstrated
+by~\cite{nelson2012}, after initialization. Such a delayed initialization of attributes, as
+explained by~\cite{fahndrich2007}, leads to the prevalence of \texttt{null}
+and the ability to initialize circular data structures, while both of these
+practices have negative impact on software quality.
+
+Despite the existence of the \texttt{final} modifier, Reflection API enables
+modification of any attributes in Java. Some mechanisms were suggested to
+overcome this technical vulnerability, for example
+via ``freezer'' objects~\cite{leino2008},
+a new type system~\cite{tschantz2005},
+or immutability assertion framework~\cite{pechtchanski2005}.
+However, without any modifications to Java~\cite{steele2005},
+thanks to the existence of Reflection API,
+it's not possible to say whether a particular Java object is modified
+after instantiation or not---any object can be modified.
+
+Aside from the \texttt{final} modifier, which is an explicit way of declaring
+read-only status of an attribute, there are also methods of
+code analysis, enabling the detection of implicit immutability. For example,
+a static flow-sensitive analysis algorithm was introduced by~\cite{porat2000}
+to classify fields and classes as either mutable or immutable.
 
 \section{Empirical Results}
 
@@ -100,8 +129,7 @@ is also obvious that the majority of classes have NCSS values smaller than 100.
 
 \section{Discussion}
 
-The notion of immutability is not as straightforward as it might seem, and many
-different definitions of immutability exist~\cite{potanin2013}.
+...
 
 \section{Conclusion}
 
