@@ -1,12 +1,13 @@
 % \documentclass[a4paper,UKenglish,cleveref, autoref]{lipics-v2019}
 \documentclass[12pt]{article}
-\bibliographystyle{plainurl}
 \title{The Impact of Immutability on Class Size}
 \author{Yegor Bugayenko\\Huawei Technologies Co., Ltd.\\Russian Research Institute (RRI)\\\texttt{yegor.bugayenko@huawei.com}}{}{}
 % \authorrunning{Yegor Bugayenko}
 % \ccsdesc[100]{Software and its engineering~Object oriented languages}
 % \keywords{Object-Oriented Programming, Immutability, NCSS}
 \usepackage[utf8]{inputenc}
+\usepackage[numbers]{natbib}
+\bibliographystyle{plainnat}
 \usepackage[inline]{enumitem}
 \usepackage{amsmath}
 \usepackage{graphicx}
@@ -28,7 +29,14 @@
 \maketitle
 
 \begin{abstract}
-To be written later...
+According to subjective opinions of many industry experts,
+object immutability is a virtue in object-oriented programming, since it
+leads to side-effect free design, cleaner code, better concurrency,
+and many other factors. However, it has never been empirically
+demonstrated exactly how immutability affects quality metrics of
+object-oriented program. In the following research we analyzed
+\thetotaljavafiles{} classes from \thetotalrepos{} public Java repositories
+to find out how immutability affects the size of code.
 \end{abstract}
 
 \section{Introduction}
@@ -49,7 +57,7 @@ reasoning about programs. Immutable classes can be freely shared, even between
 concurrent threads and with untrusted code, without the need to worry
 about modifications, even temporary ones, that could result in
 inconsistent states or broken invariants.
-Immutability is a recommended coding practice for Java~\cite{bloch2016}.
+Immutability is a recommended coding practice for Java~\citep{bloch2016}.
 
 This research empirically validates the relationship between immutability
 and NCSS.
@@ -57,66 +65,78 @@ and NCSS.
 \section{Related Work}
 
 Object immutability has been the subject of multiple researches since
-the begining of object-oriented programming. Even though, according to~\cite{potanin2013},
+the begining of object-oriented programming~\citep{hakonen1999,porat2000,lea2000}.
+Even though, according to~\citet{potanin2013},
 ``the notion of immutability is not as straightforward as it might seem, and many
-different definitions of immutability exist,'' ...
+different definitions of immutability exist,'' most industry experts consider
+immutability being a virtue of classes and objects in Java and other
+object-oriented programming languages.
 
 Even though Java encourages programmers to explicitly make objects immutable
 by attaching the \texttt{final} modifier to its attributes, very often, as was
-demonstrated by~\cite{unkel2008}, the modifier is not used even when
+demonstrated by~\citet{unkel2008}, the modifier is not used even when
 attributes are not modified after object instantiation or, as demonstrated
-by~\cite{nelson2012}, after initialization. Such a delayed initialization of attributes, as
-explained by~\cite{fahndrich2007}, leads to the prevalence of \texttt{null}
+by~\citet{nelson2012}, after initialization. Such a delayed initialization of attributes, as
+explained by~\citet{fahndrich2007}, leads to the prevalence of \texttt{null}
 and the ability to initialize circular data structures, while both of these
 practices have negative impact on software quality.
 
 Despite the existence of the \texttt{final} modifier, Reflection API enables
 modification of any attributes in Java. Some mechanisms were suggested to
 overcome this technical vulnerability, for example
-via ``freezer'' objects~\cite{leino2008},
-a new type system~\cite{tschantz2005},
-or immutability assertion framework~\cite{pechtchanski2005}.
-However, without any modifications to Java~\cite{steele2005},
+via ``freezer'' objects~\citep{leino2008},
+a new type system~\citep{tschantz2005},
+or immutability assertion framework~\citep{pechtchanski2005}.
+However, without any modifications to Java~\citep{steele2005},
 thanks to the existence of Reflection API,
 it's not possible to say whether a particular Java object is modified
 after instantiation or not---any object can be modified. As was noticed
-by~\cite{hakonen1999} in relation to immutability,
+by~\citet{hakonen1999} in relation to immutability,
 ``none of the current OO languages can prevent the programmer from writing
 a piece of code which violates the integrity of an object''
 
 Aside from the \texttt{final} modifier, which is an explicit way of declaring
 read-only status of an attribute, there are also methods of
 code analysis, enabling the detection of implicit immutability. For example,
-a static flow-sensitive analysis algorithm was introduced by~\cite{porat2000}
+a static flow-sensitive analysis algorithm was introduced by~\citet{porat2000}
 to classify fields and classes as either mutable or immutable.
 
 Even if programmers do not violate encapsulation via reflection, the
 modified \texttt{final} only guarantees shallow immutability, as
-explained by~\cite{hakonen1999}. Deep immutability, on the other hand,
+explained by~\citet{hakonen1999}. Deep immutability, on the other hand,
 exists only if the object pointed by the attributes are deeply immutable
 (recursively).
+
+To our knowledge, the impact of immutability of class size has not been
+analyzed yet.
 
 \section{Empirical Results}
 
 A list of Java repositories were retrieved from GitHub via their
-public API. The first \totalrepos{} repositories were taken, which satisfied
+public API. The first \thetotalrepos{} repositories were taken, which satisfied
 the selection criteria:
 \begin{enumerate*}[label={\arabic*)}]
-\item more than 1000 stars,
+\item more than 1,000 GitHub stars,
 \item more than 200 Kb of data,
-\item not archived,
+\item not archived, and
 \item public.
 \end{enumerate*}
-The list included popular Java open source products, like
+The list included popular Java open source products, such as
 Spring, RxJava, Guava, MyBatis, Clojure, JUnit, Lombok,
 Graal, Selenium, Spark, Mockito, Neo4j, Jenkins, Netty, and others.
 
 Files with \texttt{.java} extension were taken from all repositories.
-There were \totaljavafiles{} files found. Classes without a single
+There were \thetotaljavafiles{} files found. Classes without a single
 non-\texttt{static} attribute were excluded (such as utility classes,
-interfaces, or enums).
+interfaces, or enums), despite the fact that some OOP
+experts consider such classes valid and immutable, saying that
+``the simplest immutable objects have no internal fields at all''~\citep{lea2000}.
+We decided to not take these classes into account because they do not instantiate objects
+and because of that do not belong to object-oriented paradigm,
+as explained by~\cite{west2004,bugayenko2017}.
 
-NCSS metric and immutability were calculated for each Java class.
+NCSS metric and immutability were calculated for each Java class,
+using javalang, Java-parsing library written in Python.
 A class was considered immutable if it didn't have any
 attributes without \texttt{final} modifier.
 
@@ -126,6 +146,8 @@ all classes with the given NCSS. The diameter of the plot on the graph
 is related to the amount of classes found for the specific NCSS. Classes
 with NCSS larger than 1000 were excluded from the graph for the sake of
 visual elegancy.
+The right side of the graph has mostly (over 90\%) mutable classes. The largest
+value of NCSS observed was \thelargestncss{}.
 
 \begin{figure}[h]
   \input{ncss.tex}
@@ -136,14 +158,13 @@ visual elegancy.
 The tendency is visually obvious: larger classes are less often immutable. It
 is also obvious that the majority of classes have NCSS values smaller than 100.
 
-\section{Discussion}
-
-...
-
 \section{Conclusion}
 
 It was empirically confirmed that larger Java classes tend to be immutable
-less frequently than smaller ones.
+less frequently than smaller ones. At the same time it is possible to conclude
+that immutable classes tend to be smaller. Both conclusions justify
+the hypothesis that immutability in object-oriented programming leads
+to higher maintainability, since classes will be smaller.
 
 The source code of Ruby and Python scripts used to do the research
 is available in GitHub repository \texttt{yegor256/size-vs-immutability}.

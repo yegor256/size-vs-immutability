@@ -61,11 +61,12 @@ summary:
 		cat "$${f}" >> summary.csv; \
 	done
 	echo "There are $$(wc -l < summary.csv) Java classes measured"
-	echo "\\\def\\\totaljavafiles{$$(wc -l < summary.csv)}" > paper/total.tex
-	echo "\\\def\\\totalrepos{$$(find clones -depth 2 -type directory | wc -l)}" >> paper/total.tex
 
 draw: summary.csv
 	ruby draw.rb --max-ncss=1000 --circle-size=8 --summary=summary.csv > paper/ncss.tex
+	echo "\\\def\\\thetotaljavafiles{$$(wc -l < summary.csv)}" > paper/total.tex
+	echo "\\\def\\\thetotalrepos{$$(find clones -depth 2 -type directory | wc -l)}" >> paper/total.tex
+	echo "\\\def\\\thelargestncss{$$(cat summary.csv | awk  -F ',' '{print $$1}' | sort -n -r | head -1)}" >> paper/total.tex
 
 article: paper/ncss.tex paper/total.tex
 	cd paper; latexmk -pdf article
