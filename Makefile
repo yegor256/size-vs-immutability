@@ -67,5 +67,5 @@ summary:
 draw: summary.csv
 	ruby draw.rb --max-ncss=1000 --circle-size=8 --summary=summary.csv > paper/ncss.tex
 
-article: ncss.tex
+article: paper/ncss.tex paper/total.tex
 	cd paper; latexmk -pdf article

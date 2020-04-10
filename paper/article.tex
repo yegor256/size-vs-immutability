@@ -79,13 +79,22 @@ or immutability assertion framework~\cite{pechtchanski2005}.
 However, without any modifications to Java~\cite{steele2005},
 thanks to the existence of Reflection API,
 it's not possible to say whether a particular Java object is modified
-after instantiation or not---any object can be modified.
+after instantiation or not---any object can be modified. As was noticed
+by~\cite{hakonen1999} in relation to immutability,
+``none of the current OO languages can prevent the programmer from writing
+a piece of code which violates the integrity of an object''
 
 Aside from the \texttt{final} modifier, which is an explicit way of declaring
 read-only status of an attribute, there are also methods of
 code analysis, enabling the detection of implicit immutability. For example,
 a static flow-sensitive analysis algorithm was introduced by~\cite{porat2000}
 to classify fields and classes as either mutable or immutable.
+
+Even if programmers do not violate encapsulation via reflection, the
+modified \texttt{final} only guarantees shallow immutability, as
+explained by~\cite{hakonen1999}. Deep immutability, on the other hand,
+exists only if the object pointed by the attributes are deeply immutable
+(recursively).
 
 \section{Empirical Results}
 
