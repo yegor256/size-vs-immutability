@@ -41,14 +41,15 @@ to find out how immutability affects the size of code.
 
 \section{Introduction}
 
-One of the most important factors negatively affecting the quality
-of object-oriented software is the length of the code. Larger classes
-cause readability and maintability issues. One of the simplest way
-to calculate size of a Java class is via the NCSS metric, which
+On one hand, one of the most important factors negatively affecting the quality
+of object-oriented software is the \emph{size} of classes, as was
+demonstrated by~\citet{li1993,al2013}: classes with lower size have better maintainability.
+One of the simplest way
+to calculate the size of a Java class is via the NCSS metric, which
 stands for Non-Commenting Source Statements. Larger classes with bigger
 amount of statements demonstrate higher values of NCSS.
 
-Immutability is a property of a class in OOP. A class is immutable if
+On the other hand, \emph{immutability} is a property of a class in OOP. A class is immutable if
 it's impossible to modify its attributes after instantiation. In Java this
 technically means that all attributes have \texttt{final} modifier attached
 to them.
@@ -60,7 +61,7 @@ inconsistent states or broken invariants.
 Immutability is a recommended coding practice for Java~\citep{bloch2016}.
 
 This research empirically validates the relationship between immutability
-and NCSS.
+and class size.
 
 \section{Related Work}
 
@@ -70,9 +71,10 @@ Even though, according to~\citet{potanin2013},
 ``the notion of immutability is not as straightforward as it might seem, and many
 different definitions of immutability exist,'' most industry experts consider
 immutability being a virtue of classes and objects in Java and other
-object-oriented programming languages.
+object-oriented programming languages~\citep{bloch2016}. There a few important
+concerns of immutability addresses so far by object-oriented researchers.
 
-Even though Java encourages programmers to explicitly make objects immutable
+First, even though Java encourages programmers to explicitly make objects immutable
 by attaching the \texttt{final} modifier to its attributes, very often, as was
 demonstrated by~\citet{unkel2008}, the modifier is not used even when
 attributes are not modified after object instantiation or, as demonstrated
@@ -81,7 +83,7 @@ explained by~\citet{fahndrich2007}, leads to the prevalence of \texttt{null}
 and the ability to initialize circular data structures, while both of these
 practices have negative impact on software quality.
 
-Despite the existence of the \texttt{final} modifier, Reflection API enables
+Second, despite the existence of the \texttt{final} modifier, Reflection API enables
 modification of any attributes in Java. Some mechanisms were suggested to
 overcome this technical vulnerability, for example
 via ``freezer'' objects~\citep{leino2008},
@@ -95,19 +97,19 @@ by~\citet{hakonen1999} in relation to immutability,
 ``none of the current OO languages can prevent the programmer from writing
 a piece of code which violates the integrity of an object''
 
-Aside from the \texttt{final} modifier, which is an explicit way of declaring
+Third, aside from the \texttt{final} modifier, which is an explicit way of declaring
 read-only status of an attribute, there are also methods of
 code analysis, enabling the detection of implicit immutability. For example,
 a static flow-sensitive analysis algorithm was introduced by~\citet{porat2000}
 to classify fields and classes as either mutable or immutable.
 
-Even if programmers do not violate encapsulation via reflection, the
+Forth, even if programmers do not violate encapsulation via reflection, the
 modified \texttt{final} only guarantees shallow immutability, as
 explained by~\citet{hakonen1999}. Deep immutability, on the other hand,
 exists only if the object pointed by the attributes are deeply immutable
 (recursively).
 
-To our knowledge, the impact of immutability of class size has not been
+However, to our knowledge, the impact of immutability of class size has not been
 analyzed yet.
 
 \section{Empirical Results}
@@ -136,7 +138,7 @@ and because of that do not belong to object-oriented paradigm,
 as explained by~\cite{west2004,bugayenko2017}.
 
 NCSS metric and immutability were calculated for each Java class,
-using javalang, Java-parsing library written in Python.
+using \texttt{javalang}, an open source Java-parsing library written in Python.
 A class was considered immutable if it didn't have any
 attributes without \texttt{final} modifier.
 
@@ -144,8 +146,9 @@ The Figure~\ref{fig:1} demonstrates the results obtained. The x-axis is
 the value of NCSS of Java classes. The y-axis is the share of immutable classes among
 all classes with the given NCSS. The diameter of the plot on the graph
 is related to the amount of classes found for the specific NCSS. Classes
-with NCSS larger than 1000 were excluded from the graph for the sake of
-visual elegancy.
+with NCSS larger than 1000 were excluded from the graph. This decision was
+motivated by the confounding effect the size of a class has
+on the validity of object-oriented metrics, as was empirically shown by~\citet{el2001}.
 The right side of the graph has mostly (over 90\%) mutable classes. The largest
 value of NCSS observed was \thelargestncss{}.
 
@@ -156,7 +159,8 @@ value of NCSS observed was \thelargestncss{}.
 \end{figure}
 
 The tendency is visually obvious: larger classes are less often immutable. It
-is also obvious that the majority of classes have NCSS values smaller than 100.
+was also observed that the majority of classes have NCSS values smaller than 100:
+\thebelowhundred{} classes out of \thetotaljavafiles{} total.
 
 \section{Conclusion}
 

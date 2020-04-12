@@ -1,3 +1,5 @@
+[![CI](https://github.com/yegor256/size-vs-immutability/workflows/latex/badge.svg)](https://github.com/yegor256/size-vs-immutability/actions?query=latex)
+
 Question: Is there a correlation between Java class size and its
 immutability? It is suggested that immutable classes are smaller.
 This research proves this hypothesis.
