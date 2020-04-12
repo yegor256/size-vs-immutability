@@ -27,9 +27,10 @@ install:
 	python3 -m pip install -r requirements.txt
 
 clean:
-	rm -rf *.tex
-	rm -rf repos.txt
-	rm -rf summary.csv
+	rm -f paper/total.tex
+	rm -f paper/ncss.tex
+	rm -f repos.txt
+	rm -f summary.csv
 	rm -rf clones
 	rm -rf copies
 	cd paper; latexmk -c
