@@ -24,11 +24,11 @@
 require 'slop'
 
 opts = Slop.parse(ARGV, strict: true, help: true) do |o|
-  o.integer '--width', default: 12
-  o.integer '--height', default: 8
+  o.integer '--width', default: 9
+  o.integer '--height', default: 5
   o.integer '--max-ncss', default: 1000
   o.integer '--steps', default: 100
-  o.integer '--circle-size', default: 8
+  o.integer '--circle-size', default: 6
   o.string '--summary', default: 'summary.csv'
 end
 

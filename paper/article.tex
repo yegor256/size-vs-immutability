@@ -20,16 +20,21 @@
 % OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 % SOFTWARE.
 
-% \documentclass[a4paper,UKenglish,cleveref, autoref]{lipics-v2019}
-\documentclass[12pt]{article}
-\title{The Impact of Immutability on Class Size}
+\documentclass[sigconf]{acmart}
+\title{The Impact of Object Immutability on the Java Class Size}
 \author{Yegor Bugayenko}{}{}
-% \authorrunning{Yegor Bugayenko}
-% \ccsdesc[100]{Software and its engineering~Object oriented languages}
-% \keywords{Object-Oriented Programming, Immutability, NCSS}
+\email{yegor.bugayenko@huawei.com}
+\affiliation{%
+  \institution{Huawei Technologies Co., Ltd.}
+  \city{Moscow, Russia}
+}
+\ccsdesc[100]{Software and its engineering~Object oriented languages}
+\keywords{Object-Oriented Programming, Immutability, NCSS}
+\setcopyright{acmcopyright}
+\copyrightyear{2020}
+\acmYear{2020}
+
 \usepackage[utf8]{inputenc}
-\usepackage[numbers]{natbib}
-\bibliographystyle{plainnat}
 \usepackage[inline]{enumitem}
 \usepackage{amsmath}
 \usepackage{graphicx}
@@ -47,8 +52,6 @@
   {\medskip}
 \input{total}
 \begin{document}
-\raggedbottom
-\maketitle
 
 \begin{abstract}
 According to subjective opinions of many industry experts,
@@ -60,6 +63,7 @@ object-oriented program. In the following research we analyzed
 \thetotaljavafiles{} classes from \thetotalrepos{} public Java repositories
 to find out how immutability affects the size of code.
 \end{abstract}
+\maketitle
 
 \section{Introduction}
 
@@ -85,7 +89,42 @@ Immutability is a recommended coding practice for Java~\citep{bloch2016}.
 This research empirically validates the relationship between immutability
 and class size.
 
+The paper is organized as follows.
+Section~\ref{sec:background} defines various terms used in the paper.
+Section~\ref{sec:related} covers related work in the areas of immutability and class size.
+Section~\ref{sec:results} covers our empirical case study of \thetotalrepos{} Java source code repositories.
+Section~\ref{sec:discussion} covers limitations of both the metric and the study.
+Finally, we summarize our study in Section~\ref{sec:conclusion}.
+
+\section{Background}
+\label{sec:background}
+
+Immutability in Java is a compile-time restriction of an object, making it
+impossible for other objects to modify any of its attributes. For example,
+objects of this class are immutable, thanks to the \texttt{final} modifier
+attached to all of its attributes:
+
+\begin{minted}{text}
+class Book {
+  private final int id;
+  private final String title;
+  Book(int i, String t) {
+    this.id = i;
+    this.title = t;
+  }
+}
+\end{minted}
+
+The only way to modify \texttt{final} attributes is through the constructor
+of the class, which in Java by convention has the same name as the class (\text{Book}
+in the example above).
+
+A class of any size may be immutable. A class with no attributes is immutable.
+A utility class, which is a class with no attributes, many static methods,
+and a private constructor, is immutable.
+
 \section{Related Work}
+\label{sec:related}
 
 Object immutability has been the subject of multiple researches since
 the begining of object-oriented programming~\citep{hakonen1999,porat2000,lea2000,taivalsaari1993}.
@@ -131,10 +170,11 @@ explained by~\citet{hakonen1999}. Deep immutability, on the other hand,
 exists only if the object pointed by the attributes are deeply immutable
 (recursively).
 
-However, to our knowledge, the impact of immutability of class size has not been
-analyzed yet.
+However, to our knowledge, the impact of immutability on the Java
+class size has not been analyzed yet.
 
 \section{Empirical Results}
+\label{sec:results}
 
 A list of Java repositories were retrieved from GitHub via their
 public API. The first \thetotalrepos{} repositories were taken, which satisfied
@@ -184,7 +224,13 @@ The tendency is visually obvious: larger classes are less often immutable. It
 was also observed that the majority of classes have NCSS values smaller than 100:
 \thebelowhundred{} classes out of \thetotaljavafiles{} total.
 
+\section{Discussion}
+\label{sec:discussion}
+
+To be written...
+
 \section{Conclusion}
+\label{sec:conclusion}
 
 It was empirically confirmed that larger Java classes tend to be immutable
 less frequently than smaller ones. At the same time it is possible to conclude
@@ -192,9 +238,10 @@ that immutable classes tend to be smaller. Both conclusions justify
 the hypothesis that immutability in object-oriented programming leads
 to higher maintainability, since classes will be smaller.
 
-The source code of Ruby and Python scripts used to do the research
-is available in GitHub repository \texttt{yegor256/size-vs-immutability}.
+% The source code of Ruby and Python scripts used to do the research
+% is available in GitHub repository \texttt{yegor256/size-vs-immutability}.
 
+\bibliographystyle{ACM-Reference-Format}
 \bibliography{main}
 
 \end{document}
