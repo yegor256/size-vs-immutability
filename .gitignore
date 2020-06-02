@@ -14,4 +14,5 @@ article.pdf
 *.bbl
 *.blg
 *.m
+*.spl
 _minted-article/

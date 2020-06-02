@@ -87,7 +87,7 @@ summary:
 draw: summary.csv
 	ruby draw.rb --max-ncss=1000 --circle-size=8 --summary=summary.csv > paper/ncss.tex
 	echo "\\\def\\\thetotaljavafiles{$$(wc -l < summary.csv)}" > paper/total.tex
-	echo "\\\def\\\thetotalrepos{$$(find clones -depth 2 -type directory | wc -l)}" >> paper/total.tex
+	echo "\\\def\\\thetotalrepos{$$(find clones/ -depth 2 -type directory | wc -l)}" >> paper/total.tex
 	echo "\\\def\\\thelargestncss{$$(cat summary.csv | awk  -F ',' '{print $$1}' | sort -n -r | head -1)}" >> paper/total.tex
 	echo "\\\def\\\thebelowhundred{$$(cat summary.csv | awk  -F ',' '{ if ($$1 <= 100) { print } }' | wc -l)}" >> paper/total.tex
 

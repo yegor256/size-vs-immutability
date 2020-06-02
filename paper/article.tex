@@ -20,20 +20,17 @@
 % OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 % SOFTWARE.
 
-\documentclass[sigconf]{acmart}
+\documentclass[3p,times,procedia]{elsarticle}
+\usepackage{ecrc}
+\volume{00}
+\firstpage{1}
+\journalname{Procedia Computer Science}
+\runauth{Yegor Bugayenko et al.}
+\jid{procs}
 \title{The Impact of Object Immutability on the Java Class Size}
-\author{Yegor Bugayenko}{}{}
-\email{yegor.bugayenko@huawei.com}
-\affiliation{%
-  \institution{Huawei Technologies Co., Ltd.}
-  \city{Moscow, Russia}
-}
-\ccsdesc[100]{Software and its engineering~Object oriented languages}
-\keywords{Object-Oriented Programming, Immutability, NCSS}
-\setcopyright{acmcopyright}
-\copyrightyear{2020}
-\acmYear{2020}
 
+\usepackage[bookmarks=false]{hyperref}
+  \hypersetup{colorlinks,linkcolor=blue,citecolor=blue,urlcolor=blue}
 \usepackage[utf8]{inputenc}
 \usepackage[inline]{enumitem}
 \usepackage{amsmath}
@@ -52,18 +49,26 @@
   {\medskip}
 \input{total}
 \begin{document}
+\begin{frontmatter}
 
+\dochead{24th International Conference on Knowledge-Based and Intelligent Information \& Engineering Systems}%
+\title{The Impact of Object Immutability on the Java Class Size}
+\author[a]{Yegor Bugayenko}
+\author[b]{Sergey Zykov}
+\address[a]{Huawei Technologies Co., Ltd., Moscow, Russia}
+\address[b]{Higher School of Economics, Moscow, Russia}
 \begin{abstract}
-According to subjective opinions of many industry experts,
+According to the subjective opinions of many industry experts,
 object immutability is a virtue in object-oriented programming, since it
-leads to side-effect free design, cleaner code, better concurrency,
+leads to side-effect-free design, cleaner code, better concurrency,
 and many other factors. However, it has never been empirically
 demonstrated exactly how immutability affects quality metrics of
-object-oriented program. In the following research we analyzed
+object-oriented programs. In the following research, we analyzed
 \thetotaljavafiles{} classes from \thetotalrepos{} public Java repositories
-to find out how immutability affects the size of code.
+to find out how immutability affects the size of the code.
 \end{abstract}
-\maketitle
+\begin{keyword}Object-Oriented Programming; Immutability; NCSS\end{keyword}
+\end{frontmatter}
 
 \section{Introduction}
 
@@ -116,7 +121,7 @@ class Book {
 \end{minted}
 
 The only way to modify \texttt{final} attributes is through the constructor
-of the class, which in Java by convention has the same name as the class (\text{Book}
+of the class, which in Java by convention has the same name as the class (\texttt{Book}
 in the example above).
 
 A class of any size may be immutable. A class with no attributes is immutable.
@@ -227,7 +232,102 @@ was also observed that the majority of classes have NCSS values smaller than 100
 \section{Discussion}
 \label{sec:discussion}
 
-To be written...
+The results obtained empirically confirm the hyposesis that immutability
+not only leads to better concurrency, side-effect free design, cleaner
+contracts between classes, but also to smaller classes, by the amount of
+methods and attributes inside.
+
+This is a practical comparison example of two Java libraries designed
+by two different groups of programmers for the same purpose: sending emails from Java code.
+The first one is \code{commons-email} (version 1.5) by Apache with
+a large mutable class \code{SimpleEmail} at the core.
+The second one is \code{jcabi-email} (version 1.10) with a set of immutable classes.
+Here is how Java source code may look, if it sends an email using \code{commons-email}:
+
+\begin{minted}{text}
+Email email = new SimpleEmail();
+email.setHostName("smtp.googlemail.com");
+email.setSmtpPort(465);
+email.setAuthenticator(new DefaultAuthenticator("user", "pwd"));
+email.setFrom("yegor256@gmail.com", "Yegor Bugayenko");
+email.addTo("friend@jcabi.com");
+email.setSubject("How are you?");
+email.setMsg("Hi, how are you?");
+email.send();
+\end{minted}
+
+Here is how the same email sending scenario would be
+implemented with \code{jcabi-email}:
+
+\begin{minted}{text}
+Postman postman = new Postman.Default(
+  new SMTP("smtp.googlemail.com", 465, "user", "pwd")
+);
+Envelope envelope = new Envelope.MIME(
+  new Array<Stamp>(
+    new StSender("Yegor Bugayenko <yegor256@gmail.com>"),
+    new StRecipient("friend@jcabi.com"),
+    new StSubject("How are you?")
+  ),
+  new Array<Enclosure>(
+    new EnPlain("Hi, how are you?")
+  )
+);
+postman.send(envelope);
+\end{minted}
+
+In the first example, it is a monster \code{SimpleEmail} class that can do many things, including
+sending MIME message via SMTP, creating the message, configuring
+its parameters, adding MIME parts to it, and so on. There are 33 private properties, over
+a hundred methods, and about two thousands lines of code.
+
+In the second example, there are seven objects instantiated via seven \code{new} calls.
+\code{Postman} is responsible for packaging a MIME message; \code{SMTP} is
+responsible for sending it via SMTP; stamps (\code{StSender}, \code{StRecipient},
+and \code{StSubject}) are responsible for configuring the MIME message before
+delivery; enclosure \code{EnPlain} is responsible for creating a MIME part
+for the message, which is going to be send. These seven objects being constructed,
+encapsulating one into another, and then the postman is asked to \code{send()}
+the envelope over the wire.
+
+From a user perspective, there is almost nothing wrong. \code{SimpleEmail} is a powerful
+class with multiple controls---a project needs to pick the right one and the job
+gets done. However, from a developer perspective \code{SimpleEmail} class is
+very difficult to maintain, mostly because the class is large.
+Multiple getters and setters, which are the control points of the class, modify
+object attributes, configuring its behavior. When a new functionality is
+required, a developer has to add new attributes to the class and a new
+pair of setters and getters. Of course, such a modification decreases the
+cohesion of the class, since there is very little or no interconnection
+between newly added attributes and previously existing ones. Every new method
+added to such a big class, turns into an isolated island of functionality,
+with its own set of attributes.
+
+The immutability of a class makes it difficult to make a class larger
+without spending a big amount of efforts for refactoring.
+If the \code{SimpleEmail} class would be immutable
+in the beginning, it wouldn't be possible to add so many methods into it
+and encapsulate so many properties. Because an immutable object only accepts a state
+through its constructors. It's difficult to imagine a 33-argument constructor.
+When a class is immutable in the first place, its developers are forced
+to keep it cohesive and small. Because they can't encapsulate
+too much and they can't modify what's encapsulated. Just two or three
+arguments of a constructor and the reasonable limit is reached. Everything
+on top of that will look strange and clumsy.
+
+The immutable design of \code{jcabi-email} implements exactly the same
+email sending functionality, but employs seven classes for that, instead
+of one. Of course, the cohesiveness of each of them is much higher than
+the one of \code{SimpleEmail}. The length of each of them is below 300
+lines of code, which by itself is a perfect indicator of high readability
+and maintainability.
+Moreover, to extend the functionality of the library, existing classes
+don't need to be modified. Each new feature must be added through
+creation of new classes and implementing existing interfaces.
+
+Emprical results collected above confirm the logic explained. Larger classes
+tend to be mutable, which makes it easier for their authors to make them
+even larger when it's necessary.
 
 \section{Conclusion}
 \label{sec:conclusion}
